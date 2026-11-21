@@ -95,6 +95,19 @@ jobs:
           path: app/build/outputs/apk/release/*.apk
           retention-days: 14
 
+      - name: Build Debug & AndroidTest APKs
+        run: |
+          ./gradlew assembleDebug assembleDebugAndroidTest --stacktrace
+
+      - name: Upload Debug & AndroidTest APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-voice-android-test-apks
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/androidTest/debug/*.apk
+          retention-days: 14
+
       - name: Publish GitHub Prerelease (on v* tags)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2

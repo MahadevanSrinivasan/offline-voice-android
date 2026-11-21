@@ -90,4 +90,32 @@ else
   echo "✓ whisper.cpp source already exists."
 fi
 
+echo "=== 5. Fetching androidTest audio fixtures ==="
+ANDROID_TEST_ASSETS="${REPO_ROOT}/app/src/androidTest/assets"
+mkdir -p "${ANDROID_TEST_ASSETS}"
+
+if [ ! -f "${ANDROID_TEST_ASSETS}/jfk.wav" ]; then
+  echo "Copying jfk.wav from whisper.cpp samples..."
+  cp "${WHISPER_SRC}/samples/jfk.wav" "${ANDROID_TEST_ASSETS}/jfk.wav"
+  echo "✓ Copied jfk.wav"
+else
+  echo "✓ jfk.wav already exists."
+fi
+
+if [ ! -f "${ANDROID_TEST_ASSETS}/0.wav" ] || [ ! -f "${ANDROID_TEST_ASSETS}/test_keywords.txt" ]; then
+  echo "Downloading sherpa-onnx KWS test fixtures..."
+  TMP_DIR="$(mktemp -d)"
+  curl -sSL -o "${TMP_DIR}/kws.tar.bz2" \
+    "https://github.com/k2-fsa/sherpa-onnx/releases/download/kws-models/sherpa-onnx-kws-zipformer-gigaspeech-3.3M-2024-01-01.tar.bz2"
+  tar -xjf "${TMP_DIR}/kws.tar.bz2" -C "${TMP_DIR}"
+  KWS_TEST_WAVS="${TMP_DIR}/sherpa-onnx-kws-zipformer-gigaspeech-3.3M-2024-01-01/test_wavs"
+  cp "${KWS_TEST_WAVS}/0.wav" "${ANDROID_TEST_ASSETS}/0.wav"
+  cp "${KWS_TEST_WAVS}/1.wav" "${ANDROID_TEST_ASSETS}/1.wav"
+  cp "${KWS_TEST_WAVS}/test_keywords.txt" "${ANDROID_TEST_ASSETS}/test_keywords.txt"
+  rm -rf "${TMP_DIR}"
+  echo "✓ Extracted sherpa-onnx KWS test fixtures (0.wav, 1.wav, test_keywords.txt)"
+else
+  echo "✓ sherpa-onnx KWS test fixtures already exist."
+fi
+
 echo "=== All assets and sources successfully fetched! ==="

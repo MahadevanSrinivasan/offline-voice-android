@@ -23,3 +23,7 @@ third_party/whisper.cpp
 app/libs/*.aar
 app/src/main/assets/*.onnx
 app/src/main/assets/*.bin
+
+# Instrumented test audio fixtures (fetched by scripts/fetch-assets.sh)
+app/src/androidTest/assets/*.wav
+app/src/androidTest/assets/test_keywords.txt

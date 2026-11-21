@@ -1,0 +1,25 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+build/
+app/build/
+captures/
+.externalNativeBuild
+.cxx
+
+# Keystores and secrets
+*.keystore
+*.jks
+release-keystore.jks
+
+# Build outputs
+*.apk
+*.aab
+
+# Large downloaded binaries and models (requirement 5)
+third_party/whisper.cpp
+app/libs/*.aar
+app/src/main/assets/*.onnx
+app/src/main/assets/*.bin

@@ -71,11 +71,9 @@ class SherpaKwsEngine(private val context: Context) {
                 this.keywordsScore = 1.0f
                 this.keywordsThreshold = 0.25f
                 this.numTrailingBlanks = 2
-                this.keywordsFile = if (customKeywordsFile.exists()) {
-                    customKeywordsFile.absolutePath
-                } else {
-                    "keywords.txt"
-                }
+                // AssetManager is non-null below, so keep keywordsFile asset-relative;
+                // customKeywordsFile content is passed directly to createStream(currentKeywords).
+                this.keywordsFile = "keywords.txt"
             }
 
             try {

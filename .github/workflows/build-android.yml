@@ -30,12 +30,12 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Set up Android SDK, NDK, and CMake
-        uses: android-actions/setup-android@v3
-
-      - name: Install NDK 27.2.12479018 and CMake 3.22.1
+      - name: Accept Android SDK Licenses and Install NDK & CMake
         run: |
-          yes | sdkmanager "ndk;27.2.12479018" "cmake;3.22.1" "platforms;android-35" "build-tools;35.0.0"
+          SDKMANAGER=$(which sdkmanager || find /usr/local/lib/android/sdk/cmdline-tools -name "sdkmanager" | head -n 1)
+          echo "Using sdkmanager at: ${SDKMANAGER}"
+          yes | ${SDKMANAGER} --licenses || true
+          yes | ${SDKMANAGER} "ndk;27.2.12479018" "cmake;3.22.1" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Make scripts and gradlew executable
         run: |
@@ -84,7 +84,7 @@ jobs:
         run: |
           APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
           echo "Found release APK: ${APK_PATH}"
-          APKSIGNER=$(find $ANDROID_HOME/build-tools -name "apksigner" | sort -V | tail -n 1)
+          APKSIGNER=$(find $ANDROID_HOME/build-tools /usr/local/lib/android/sdk/build-tools -name "apksigner" 2>/dev/null | sort -V | tail -n 1)
           echo "Using apksigner: ${APKSIGNER}"
           ${APKSIGNER} verify --verbose "${APK_PATH}"
 
